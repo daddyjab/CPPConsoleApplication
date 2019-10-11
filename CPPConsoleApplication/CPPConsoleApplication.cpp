@@ -2,10 +2,44 @@
 //
 
 #include <iostream>
+// #include <string>  -- no need to include <string> explicitly, since already in <iostream> library
+using namespace std;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	// An array of integers
+	int arr[] = { 11, 22, 33, 44, 55 };
+
+	// Output a start up message
+    std::cout << "Let's calculate a sum of several values." << endl;
+	
+	// Find the number of elements in array arr
+	int arr_len = size(arr);
+
+	// Display the list of all array elements on the same line, then the sum
+	cout << "Array [ " << arr_len << " elements ]: {";
+
+	// Initial the array sum to 0
+	int arr_sum = 0;
+
+	// Loop through all elements in the array arr
+	for (int i = 0; i < arr_len; i++) {
+
+		// If this is not the first element, add a separator
+		if (i > 0) cout << ", ";
+
+		// Output the value of the array element
+		cout << arr[i];
+
+		// Accumulate the sum
+		arr_sum += arr[i];
+	}
+
+	// End the line containing the list of array elements
+	cout << "}" << endl;
+
+		// Display the sum
+		cout << "Sum of array elements: " << arr_sum << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
