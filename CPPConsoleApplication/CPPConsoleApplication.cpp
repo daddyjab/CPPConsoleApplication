@@ -4,6 +4,10 @@
 #include <iostream>		// Standard Input/Output Streams Library: Includes <string> library
 #include <cstdlib>		// C Standard Library: Includes rand()
 #include <ctime>		// C Time Library: Includes time()
+#include <fstream>		// File Input/Output Streams LIbrary: ofstream (w), ifstream (r), fstream (r/w)
+#include <string>		// String Library: Includes getline()
+
+#include "MyClass.h"	// User defined class with some useful content
 
 using namespace std;
 
@@ -134,6 +138,132 @@ void gen_fib(int a_n) {
 	return;
 }
 
+void try_class_stuff() {
+
+	// Regular object
+	cout << "Regular Object (2 arguments): [obj]" << endl;
+	MyClass obj(5,10);
+	obj.myPrint();
+	cout << endl;
+
+	//MyClass* ptr = &obj;
+	//ptr->myPrint();
+	//cout << endl;
+
+	cout << "Regular Object (1 argument): [next_obj]" << endl;
+	MyClass next_obj(99);
+	next_obj.myPrint();
+	cout << endl;
+
+	// Add 2 objects
+	cout << "Adding 2 objects (overloaded operator: [+]" << endl;
+	cout << "Regular Object: [result_obj = obj + next_obj]" << endl;
+	MyClass result_obj = obj + next_obj;
+	result_obj.myPrint();
+	cout << endl;
+
+	// Constant object
+	//cout << "Constant Object (No arguments): [const_obj]" << endl;
+	//const MyClass const_obj;
+
+	//const_obj.myPrint();
+	cout << endl;
+}
+
+void tryfunctemp()
+{
+	// Use a function template to add 2 values of various data types
+	int a = 55, b = 44;
+	int sum_int = 0;
+	sum_int = sum(a, b);
+
+	cout << "Adding 2 values (function template: [sum])" << endl;
+	cout << "[" << a << "] + [" << b << "] = [" << sum_int << "]" << endl;
+
+	cout << endl;
+
+	// Use a function template to add 2 values of various data types
+	float c = 55.5, d = 44.4;
+	float sum_float = 0.0;
+	sum_float = sum(c, d);
+
+	cout << "Adding 2 values (function template: [sum])" << endl;
+	cout << "[" << c << "] + [" << d << "] = [" << sum_float << "]" << endl;
+
+	cout << endl;
+
+	// Use a class template of various data types
+	int e = 5, f = 4;
+	Pair<int> obj_int(e, f);
+
+	cout << "Bigger of 2 numbers (class template: [Pair<int>])" << endl;
+	cout << "[" << e << "] " << (e > f ? ">" : "<=") << " [" << f << "] = [" << obj_int.bigger() << "]" << endl;
+	cout << endl;
+
+	// Use a class template of various data types
+	float g = 555.55, h = 444.44;
+	Pair<float> obj_float(g, h);
+
+	cout << "Bigger of 2 numbers (class template: [Pair<float>])" << endl;
+	cout << "[" << g << "] " << (g > h ? ">" : "<=") << " [" << h << "] = [" << obj_float.bigger() << "]" << endl;
+	cout << endl;
+}
+
+void tryfilestuff() {
+	// Open a file for writing
+	ofstream MyFile;
+	MyFile.open("test.txt");
+	if (MyFile.is_open()) {
+		cout << "Good News: File is open." << endl;
+		MyFile << "Some text." << endl;
+		MyFile.close();
+	}
+	else {
+		cout << "A Problem: File didn't open." << endl;
+	}
+
+	// Specify the file path using the constructor
+	ofstream MyFile2("test.txt", ios::app);
+	if (MyFile2.is_open()) {
+		cout << "Good News: File is open." << endl;
+		MyFile2 << "This is awesome!\n" << endl;
+		MyFile2.close();
+	}
+	else {
+		cout << "A Problem: File didn't open." << endl;
+	}
+
+
+	// Read from a file
+	ifstream MyFile3("test.txt");
+	string line;
+
+	if (MyFile3.is_open()) {
+		cout << "Good News: File is open for reading." << endl;
+		
+		// Loop through all the lines in the file
+		while ( getline(MyFile3, line)) {
+			cout << line << endl;
+		}
+		MyFile3.close();
+	}
+	else {
+		cout << "A Problem: File didn't open for reading." << endl;
+	}
+
+
+}
+
+void trysomeCstuff() {
+	MyStruct test_struct;
+	test_struct.a = 1;
+	test_struct.b = 3.14159;
+	strncpy_s(test_struct.c, "Hello, there", 29);
+
+	//printf("%s, the values are %d and %.4f", test_struct.c, test_struct.a, test_struct.b);
+	printf("%s, the values are %d and %.4f", test_struct.c, test_struct.a, test_struct.b);
+}
+
 int main()
 {
 	// Output a start up message
@@ -197,6 +327,17 @@ int main()
 	gen_fib(15);
 
 
+	// Try some class stuff
+	try_class_stuff();
+
+	// Try some function template stuff
+	tryfunctemp();
+
+	// Try some file stuff
+	tryfilestuff();
+
+	// Try some plain old C stuff
+	trysomeCstuff();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
