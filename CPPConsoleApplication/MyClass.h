@@ -92,8 +92,16 @@ public:
 	}
 };
 
+// Structure definition
 struct MyStruct {
 	int a;
 	double b;
 	char c[30];
 };
+
+// Typedef to create a new type
+typedef struct {
+	int a;
+	double b;
+	char c[30];
+} MyTestType;

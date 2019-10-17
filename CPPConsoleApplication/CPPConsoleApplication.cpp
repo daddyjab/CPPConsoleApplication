@@ -6,6 +6,8 @@
 #include <ctime>		// C Time Library: Includes time()
 #include <fstream>		// File Input/Output Streams LIbrary: ofstream (w), ifstream (r), fstream (r/w)
 #include <string>		// String Library: Includes getline()
+#include <stdlib.h>		// Standard Library with Memory Management functions: malloc(), calloc(), realloc(), free()
+#include <Windows.h>	// Windows Library: sleep()
 
 #include "MyClass.h"	// User defined class with some useful content
 
@@ -56,7 +58,7 @@ float gen_rand_nums(int a_count) {
 	cout << "(displayed every " << d_interval << " values): " << endl;
 
 	// Initialize the random number generator with current time serial number as the seed
-	srand(time(0));
+	srand((unsigned int)time(0));
 
 	for (int k = 0; k < r_count; k++) {
 		// Get a random number
@@ -142,7 +144,7 @@ void try_class_stuff() {
 
 	// Regular object
 	cout << "Regular Object (2 arguments): [obj]" << endl;
-	MyClass obj(5,10);
+	MyClass obj(5, 10);
 	obj.myPrint();
 	cout << endl;
 
@@ -183,8 +185,8 @@ void tryfunctemp()
 	cout << endl;
 
 	// Use a function template to add 2 values of various data types
-	float c = 55.5, d = 44.4;
-	float sum_float = 0.0;
+	float c = (float)55.5, d = (float)44.4;
+	float sum_float = (float)0.0;
 	sum_float = sum(c, d);
 
 	cout << "Adding 2 values (function template: [sum])" << endl;
@@ -201,7 +203,7 @@ void tryfunctemp()
 	cout << endl;
 
 	// Use a class template of various data types
-	float g = 555.55, h = 444.44;
+	float g = (float)555.55, h = (float)444.44;
 	Pair<float> obj_float(g, h);
 
 	cout << "Bigger of 2 numbers (class template: [Pair<float>])" << endl;
@@ -240,9 +242,9 @@ void tryfilestuff() {
 
 	if (MyFile3.is_open()) {
 		cout << "Good News: File is open for reading." << endl;
-		
+
 		// Loop through all the lines in the file
-		while ( getline(MyFile3, line)) {
+		while (getline(MyFile3, line)) {
 			cout << line << endl;
 		}
 		MyFile3.close();
@@ -254,14 +256,172 @@ void tryfilestuff() {
 
 }
 
+int test_func(char* a_str) {
+	return (int)strlen(a_str);
+}
+
 void trysomeCstuff() {
-	MyStruct test_struct;
+	// Structure and Strings ******************************************************
+	struct MyStruct test_struct;
 	test_struct.a = 1;
 	test_struct.b = 3.14159;
 	strncpy_s(test_struct.c, "Hello, there", 29);
 
-	//printf("%s, the values are %d and %.4f", test_struct.c, test_struct.a, test_struct.b);
-	printf("%s, the values are %d and %.4f", test_struct.c, test_struct.a, test_struct.b);
+	struct MyStruct another_struct = { 2, 6.28, "Quick Check" };
+
+	printf("Trying Some C Stuff\n\n");
+	const char* PROMPT_STR[] = { ", the values are ", " and " };
+
+	printf("Use a Structure: [MyStruct] with manually assignment\n");
+	printf("%s%s%d%s%.4f\n\n", test_struct.c, PROMPT_STR[0], test_struct.a, PROMPT_STR[1], test_struct.b);
+
+	printf("Use a Structure: [MyStruct] with initialized values\n");
+	printf("%s%s%d%s%.4f\n\n", another_struct.c, PROMPT_STR[0], another_struct.a, PROMPT_STR[1], another_struct.b);
+
+	// Typedef
+	MyTestType another_type = { 3, 9.42, "Type Check" };
+
+	printf("Use a Typedef: [MyTestType] with initialized values\n");
+	printf("%s%s%d%s%.4f\n\n", another_type.c, PROMPT_STR[0], another_type.a, PROMPT_STR[1], another_type.b);
+
+	// Function Pointers **********************************************************
+	int (*ptr_to_func)(char*);		// Pointer to a function
+	const char* test_string = "This is a test string";	// Test string
+	int ts_len;
+
+	// Assign the address of test_func() to the pointer
+	ptr_to_func = test_func;
+
+	// Call the function with the test string
+	ts_len = ptr_to_func((char*)test_string);
+
+	// Display the results
+	printf("Use a Pointer to FUnction: [ptr_to_func] pointing to [test_func]\n");
+	printf("String: [%s], String Length: [%d]\n\n", test_string, ts_len);
+
+	// Void Pointer **********************************************************
+	int abc_int = 88;
+	double def_double = 99.0;
+	const char* ghi_string = "String for testing a void pointer";
+
+	void* v_ptr;		// void pointer - can point to any type of value in memory
+
+	// Pointer to int
+	v_ptr = &abc_int;
+	printf("Using a void Pointer: [v_ptr] pointing to [abc_int] = ");
+	printf("Value: [%d]\n", *((int*)v_ptr));
+
+	// Pointer to double
+	v_ptr = &def_double;
+	printf("Using a void Pointer: [v_ptr] pointing to [def_double] = ");
+	printf("Value: [%.2f]\n", *((double*)v_ptr));
+
+	// Pointer to int
+	v_ptr = (char*)ghi_string;
+	printf("Using a void Pointer: [v_ptr] pointing to [ghi_string] = ");
+	printf("Value: [%s]\n\n", (char*)v_ptr);
+
+	// Memory Management
+	printf("Memory Management\n");
+
+	// Allocate memory for a block of values
+	int* ptr;	// A pointer to a block of int values
+	int n_blocks = (int)pow(10.0, 8);	// Number of blocks to allocate
+
+	printf("Allocating memory: Using [malloc()] to allocated [%d blocks] for [%d total bytes] = ",
+		(int)n_blocks, (int)(n_blocks * sizeof(*ptr)));
+
+	// Allocate memory
+	ptr = (int*)malloc(n_blocks * sizeof(*ptr));
+
+	// Check for return status
+	if (ptr != NULL) {
+		printf("Result: Memory Allocated\n\n");
+	}
+	else {
+		printf("Result: Memory NOT Allocated\n\n");
+	}
+
+	// Free up the allocated memory (after waiting a few seconds)
+	int n_waitsecs = 0;
+
+	printf("Waiting %d seconds... ", n_waitsecs);
+	Sleep((DWORD)(n_waitsecs * 1000));
+	free(ptr);
+	printf("memory now freed.\n\n");
+
+	// File I/O
+	printf("Reading and Writing Files with C\n");
+
+	// Write to a file
+	FILE* f_ptr;
+
+	const char* f_name = "test.txt";
+
+	// Open file for writing
+	printf("Opening a file [%s] for writing = ", f_name);
+
+	int retval = fopen_s(&f_ptr, f_name, "w");
+	if (retval != 0) {
+		printf("Result: Error opening file.\n");
+	}
+	else {
+		printf("Result: File opened for writing.\n");
+	}
+
+	// Write content to the file
+	int w_count = 10;
+	for (int j=1; j <= w_count; j++) {
+		fprintf(f_ptr, "This is line %d written using the `fprintf` function.\n", j);
+	}
+
+	// Close the file
+	fclose(f_ptr);
+
+	// Read content from the file
+	char i_buf[300];	// An input buffer
+
+	printf("Opening a file [%s] for reading = ", f_name);
+
+	retval = fopen_s(&f_ptr, f_name, "r");
+	if (retval != 0) {
+		printf("Result: Error opening file.\n");
+	}
+	else {
+		printf("Result: File opened for reading.\n");
+	}
+
+	// Read and print each line with a line number until the end of file is reached
+	int i_line = 1;
+	while ( fgets(i_buf, sizeof(i_buf)-1, f_ptr) != NULL ) {
+		printf("[Line %d]:%s", i_line++, i_buf);
+	}
+
+	printf("\n\n");
+
+	// Close the file
+	fclose(f_ptr);
+
+	// Various C Preprecessor directives
+
+	// List of directives
+	//	#include Including header files.
+	//	#define, #undef Defining and undefining macros.
+	//	#ifdef, #ifndef, #if, #else, #elif, #endif Conditional compilation.
+	//	#pragma Implementation and compiler specific.
+	//	#error, #warning Output an error or warning message An error halts compilation.
+
+	printf("Using C Preprocessor Directives\n");
+
+	printf("%s %s\n", __TIME__, __DATE__);
+
+	printf("__cplusplus is %d\n", __cplusplus);
+	printf("__STDCPP_THREADS__ is %d\n\n", __STDCPP_THREADS__);
+
+	printf("Function name: %s\n", __FUNCTION__);
+	printf("Decorated function name: %s\n", __FUNCDNAME__);
+	printf("Function signature: %s\n", __FUNCSIG__);
+	printf("This is line %d\n\n", __LINE__);
 }
 
 int main()
@@ -273,7 +433,7 @@ int main()
 	int arr[] = { 11, 22, 33, 44, 55 };
 
 	// Find the number of elements in array arr 
-	int arr_len = size(arr);
+	int arr_len = (int)size(arr);
 
 	// Statically Allocated Array
 	cout << "Statically Allocated Array [ " << arr_len << " elements ]: ";
@@ -338,6 +498,9 @@ int main()
 
 	// Try some plain old C stuff
 	trysomeCstuff();
+
+	// Exit
+	exit(EXIT_SUCCESS);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

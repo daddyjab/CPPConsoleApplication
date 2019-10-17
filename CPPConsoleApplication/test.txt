@@ -1,3 +1,10 @@
-Some text.
-This is awesome!
-
+This is line 1 written using the `fprintf` function.
+This is line 2 written using the `fprintf` function.
+This is line 3 written using the `fprintf` function.
+This is line 4 written using the `fprintf` function.
+This is line 5 written using the `fprintf` function.
+This is line 6 written using the `fprintf` function.
+This is line 7 written using the `fprintf` function.
+This is line 8 written using the `fprintf` function.
+This is line 9 written using the `fprintf` function.
+This is line 10 written using the `fprintf` function.
